@@ -67,8 +67,8 @@ transitions = {
         '|': ('q0', '|', TuringMachine.RIGHT),
         '.': ('q1', '.', TuringMachine.RIGHT),
         '-': ('q4', '-', TuringMachine.RIGHT),
-        '/': ('q0', ' ', TuringMachine.RIGHT),  # Adicionando transição para o '/'
-        ' ': ('q6', ' ', TuringMachine.RIGHT),  # Tratando espaço
+        '/': ('q0', ' ', TuringMachine.RIGHT),  
+        ' ': ('q6', ' ', TuringMachine.RIGHT),  
         '@': ('q40', '@', TuringMachine.RIGHT)
     },
     'q1': {
@@ -251,10 +251,10 @@ def ask_for_tape():
         print("Escolha inválida. Usando fita01.dat por padrão.")
         return 'fita01.dat'
 
-# Caminho do arquivo baseado na escolha
+
 file_name = ask_for_tape()
 
-# Verifica se o arquivo existe na pasta do projeto
+
 if os.path.exists(file_name):
     print(f"\nProcessando {file_name}...")
 
