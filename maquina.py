@@ -2,7 +2,6 @@ import os
 
 class TuringMachine:
     RIGHT = 1
-    LEFT = -1
     BLANK = '$'
 
     def __init__(self, states, input_symbols, tape_symbols, transitions, initial_state, blank_symbol, final_states):
@@ -23,8 +22,6 @@ class TuringMachine:
         current_symbol = self.tape[self.head_position]
         state_transitions = self.transitions.get(self.current_state, {})
         
-        if current_symbol not in state_transitions:
-            raise ValueError(f"Sem transição para o estado {self.current_state} e símbolo {current_symbol}")
         
         next_state, write_symbol, direction = state_transitions[current_symbol]
         self.tape[self.head_position] = write_symbol
@@ -33,24 +30,22 @@ class TuringMachine:
 
     def run(self):
         while self.current_state not in self.final_states:
-            if self.tape[self.head_position] == '@':  # Parada ao encontrar '@'
-                break
             self.step()
 
     def get_tape_content(self):
         return ''.join(self.tape).strip(self.blank_symbol)
 
     def get_clean_output(self):
-        # Remove símbolos de controle (., -, /, @) para exibir apenas a saída decodificada
+        
         return ''.join([char for char in self.tape if char.isalpha() or char == ' '])
 
 
-# Função para ler os arquivos .dat da pasta do projeto
+
 def read_file(file_name):
     with open(file_name, 'r') as file:
         return file.read().strip()
 
-# Configuração da Máquina de Turing
+
 states = [
     'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 
     'q10', 'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 
@@ -225,15 +220,15 @@ transitions = {
         '|': ('q0', 'O', TuringMachine.RIGHT)
     },
     'q40': {
-        '|': ('q0', '0', TuringMachine.RIGHT)
+        '@': ('q40', '', TuringMachine.RIGHT)
     }
 }
 initial_state = 'q0'
 blank_symbol = '$'
 final_states = ['q40']
 
-# Perguntar ao usuário qual fita ele deseja ler
-def ask_for_tape():
+
+def qual_fita():
     print("Escolha qual fita ler:")
     print("1 - fita01.dat")
     print("2 - fita02.dat")
@@ -248,32 +243,32 @@ def ask_for_tape():
     elif choice == "3":
         return 'fita03.dat'
     else:
-        print("Escolha inválida. Usando fita01.dat por padrão.")
-        return 'fita01.dat'
+        print("Escolha inválida.")
+        
 
 
-file_name = ask_for_tape()
+file_name = qual_fita()
 
 
 if os.path.exists(file_name):
     print(f"\nProcessando {file_name}...")
 
-    # Lê o conteúdo do arquivo
+    
     tape_content = read_file(file_name)
     
-    # Criação e execução da máquina para cada fita
+    
     tm = TuringMachine(states, input_symbols, tape_symbols, transitions, initial_state, blank_symbol, final_states)
 
-    # Carrega a fita na máquina
+    
     tm.load_tape(tape_content)
 
-    # Executa a máquina
+    
     tm.run()
 
-    # Exibe o processamento completo
+    
     print("Processamento:", tm.get_tape_content())
 
-    # Exibe apenas a saída limpa
+    
     print("Saída Final:", tm.get_clean_output())
 else:
     print(f"Arquivo {file_name} não encontrado.")
